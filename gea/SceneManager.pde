@@ -9,21 +9,21 @@ class SceneManager{
   SceneManager(){
 
     Scene [] allScenes = {  
-      new Nothing() ,
-      // cancion panorama
-      new RotatingSphere(),
-      // desplazamientos (2)
-      new Rain(),
+      new Nothing() ,        // 0
+      new RotatingSphere(),  // 1
+      new RotatingFrac(),    // 2
+      new DepthSquare(),     // 3
+      new Curtain(),         // 4
+      new Fluid(),           // 5
+      new Rain(),            // 6
+      new SemiCircles() ,    // 7
+      new FluidAndRotate(),  // 7.2
       new RotatingFrac(),
-      new Fluid(),
-      new FluidRotate(),
-      new SemiCircles() ,
-      new HypnoticCircle() ,
-      new DepthSquare(),
       new SquareFrac(),
+      new Fluid(),
+      new SquareBackgroundK(),
       new LineArt() ,
-      new Curtain(),
-      new SquareBackground()
+      new HypnoticCircle() 
     };
 
     scenes =allScenes;

@@ -18,8 +18,8 @@ class HypnoticCircle implements Scene
       if(dancers.hasDancers()){
         dPos = dancers.getFirstDancerMiddleXY();
         //debugging
-        pg.fill(255,0,0);
-        pg.ellipse(dPos.x, dPos.y, 14, 14);
+        //pg.fill(255,0,0);
+        //pg.ellipse(dPos.x, dPos.y, 14, 14);
       }
     }
     

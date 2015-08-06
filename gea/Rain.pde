@@ -1,7 +1,7 @@
 
 class Rain implements Scene
 {   
-  
+  int gravityX,gravityY;
 
   public Rain(){};
 
@@ -10,7 +10,7 @@ class Rain implements Scene
     world.clear();
   };
   void initialScene(){
-    contactType =0;
+    contactType =1;
     //human
     addSemiCircle();
     // humanBox = new FBox(250, 20);
@@ -26,6 +26,7 @@ class Rain implements Scene
     belowBox.setFill(0);
     belowBox.setRestitution(0);
     world.add(belowBox);
+    gravityX =gravityY = 0;
     //world.setGravity(0,100);
 
   };
@@ -36,7 +37,11 @@ class Rain implements Scene
     if(dancers.hasDancers()){
       PVector pos = dancers.getFirstDancerMiddleAndTop();
       semiCircle.setRotation(0);
-      semiCircle.setPosition(pos.x,pos.y);
+      semiCircle.setPosition(pos.x-100,pos.y);
+
+      //debug
+      fill(255,0,0);
+      ellipse(pos.x, pos.y, 14, 14);
     } else semiCircle.setPosition(width+100, height+100);
 
     for(int i =0;i<3;i++) addBox();
@@ -49,6 +54,26 @@ class Rain implements Scene
 
   void onPressedKey(String k){
     if (k == "toggle") {toggleContact();}
+    if (k == "RIGHT") {
+      gravityX+=5;
+      println("garvity X "+gravityX+ " gravity Y"+ gravityY);
+      world.setGravity(gravityX,gravityY);
+    }
+    if (k == "LEFT") {
+      gravityX-=5;
+      println("garvity X "+gravityX+ " gravity Y"+ gravityY);
+      world.setGravity(gravityX,gravityY);
+    }
+    if (k == "DOWN") {
+      gravityY+=5;
+      println("garvity X "+gravityX+ " gravity Y"+ gravityY);
+      world.setGravity(gravityX,gravityY);
+    }
+    if (k == "UP") {
+      gravityY-=5;
+      println("garvity X "+gravityX+ " gravity Y"+ gravityY);
+      world.setGravity(gravityX,gravityY);
+    }
 
   };
 
@@ -64,7 +89,7 @@ class Rain implements Scene
     int theta = 180;  // angle that will be increased each loop
     int h = 120 ;     // x coordinate of circle center
     int k = 100 ;     // y coordinate of circle center
-    int r=100;
+    int r=120;
     int step = 4;  // amount to add to theta each time (degrees)
 
     semiCircle = new FPoly();

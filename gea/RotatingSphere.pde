@@ -50,7 +50,7 @@ class RotatingSphere implements Scene
       float nRad = (r.x - l.x)/2;
       rsp.setNewRadius(nRad);
       nr =nRad;
-      println("has dancers: pdPos.x "+pdPos.x+" dPos.x "+dPos.x);
+    //  println("has dancers: pdPos.x "+pdPos.x+" dPos.x "+dPos.x);
     }
     else{
 
@@ -120,16 +120,20 @@ class RotatingSphere implements Scene
     //--------------------------------------------------------
     void draw()
     {  
-      if(newRadius>oldRadius) {
-        oldRadius*=1.001;
-        for (int ni=0; ni < maxPoints; ni++)
-        points[ni] = new PVector (points[ni].x*1.0009, points[ni].y*1.0009, points[ni].z*1.0009);
+      if(abs(newRadius-oldRadius)>40){
 
-      }
-      else{
-        oldRadius*=0.999;
-        for (int ni=0; ni < maxPoints; ni++)
-        points[ni] = new PVector (points[ni].x*0.9991, points[ni].y*0.9991, points[ni].z*0.9991);
+
+        if(newRadius>oldRadius) {
+          oldRadius*=1.01;
+          for (int ni=0; ni < maxPoints; ni++)
+          points[ni] = new PVector (points[ni].x*1.009, points[ni].y*1.009, points[ni].z*1.009);
+
+        }
+        else{
+          oldRadius*=0.99;
+          for (int ni=0; ni < maxPoints; ni++)
+          points[ni] = new PVector (points[ni].x*0.991, points[ni].y*0.991, points[ni].z*0.991);
+        }
       }
 
       for (int ni=0; ni < maxPoints; ni++)

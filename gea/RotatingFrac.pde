@@ -18,7 +18,7 @@ class RotatingFrac implements Scene
   void drawScene(){
     background(backCol); // wipe the background
     fill(thingCol);
-    if (frameCount % 5 == 0) {
+    //if (frameCount % 5 == 0) {
       dancers.getDancers();
       if(dancers.hasDancers()){
         dPos = dancers.getFirstDancerMiddleAndTop();
@@ -32,14 +32,18 @@ class RotatingFrac implements Scene
         power = abs(height/2 -dPos.y)*1/50;
         
       }
-    }
-    pushMatrix();
-      translate(width/2, height/2);
-      fill(abs(backCol-60),100);
-      ellipse(0, 0, height-30, height-30);
-      rotate(map(frameCount%1000,0,1000,0 ,2*PI));
-      plotFrac(0,0,num,PI,TWO_PI);
-    popMatrix();
+   // }
+
+    //debug
+    fill(255,0,0);
+    ellipse(dPos.x, dPos.y, 14, 14);
+
+    int shiftFrac =100;
+    drawOneFrac(width/2, height/2);
+    drawOneFrac(0+shiftFrac, height-shiftFrac);
+    drawOneFrac(0+shiftFrac, 0+shiftFrac);
+    drawOneFrac(width-shiftFrac, height-shiftFrac);
+    drawOneFrac(width-shiftFrac, 0+shiftFrac);
     //just for debugging
     fill(255,0,0);
     ellipse(dPos.x, dPos.y, 14, 14);
@@ -60,8 +64,20 @@ class RotatingFrac implements Scene
 
   void onImg(PImage img){};
 
+  void drawOneFrac(float px, float py){
+    pushMatrix();
+      translate(px,py);
+      //fill(abs(backCol-60),100);
+      //ellipse(0, 0, height-30, height-30);
+      rotate(map(frameCount%1000,0,1000,0 ,2*PI));
+      plotFrac(0,0,num,PI,TWO_PI);
+    popMatrix();
+
+  }
+
   void plotFrac( float x, float y, int n, float stem, float range ) {
     stroke(thingCol,100);
+    //strokeWeight(2);
     float r; // distance between nodes
     float t; // angle between nodes
     // use an appropriate algorithm to calculate distance between given nodes

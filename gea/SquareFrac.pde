@@ -1,6 +1,6 @@
 class SquareFrac implements Scene
 { 
-  float radio=100.0f;
+  float radio=160.0f;
   float angulo=0.0f;
   float escalamiento=0.65f;
   float angulo2=0.0f;
@@ -26,6 +26,7 @@ class SquareFrac implements Scene
     pg.beginDraw();
     //diferentes maneras de limpiar la pantalla
    //  background(0);
+    pg.noStroke();
     pg.fill(backCol,fade);
     pg.rect(0,0,width,height);
     pg.stroke(thingCol);
@@ -40,8 +41,8 @@ class SquareFrac implements Scene
     pg.endDraw();
     image(pg, 0, 0);
     //debug
-    fill(255,0,0);
-    ellipse(dPos.x, dPos.y, 14, 14);
+   // fill(255,0,0);
+    //ellipse(dPos.x, dPos.y, 14, 14);
   };
   String getSceneName(){return "SquareFrac";};
   void onPressedKey(String k){
@@ -68,6 +69,7 @@ class SquareFrac implements Scene
     //si no nos hemos pasado en nuestra iteracion
     //si lo dibujamos
     if( n < tol ) {
+      pg.fill(255,20);
       pg.rect(-radio/2,-radio/2,radio,radio);
       //circuloChido(20);
 

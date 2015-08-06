@@ -28,7 +28,7 @@ int thingCol = 255;
 int contactType = 2;
 
 PGraphics pg;
-
+//
 public void init(){
 
   frame.removeNotify();
@@ -40,6 +40,7 @@ public void init(){
 
 void setup(){
   size(1024, 768,P3D);
+  //frame.setLocation(1230,-66);
   //noCursor();
 
   globalAlpha = 0;
@@ -81,6 +82,7 @@ void setup(){
   dancers = new DancersManager(); 
 
   pg = createGraphics(width, height);
+  println("READY TO GO");
 }
 
 
@@ -100,6 +102,7 @@ void keyReleased(){
   if (key == 'l' || key =='L') manager.pressedKey("lines");
   if (key == 'r' || key =='R') manager.pressedKey("reject");
   if (key == 'g' || key == 'G') manager.pressedKey("gravity");
+  if (key == 's' || key == 'S') manager.pressedKey("shake"); 
 
   // global variables
   if (key == 'v' || key =='V') {

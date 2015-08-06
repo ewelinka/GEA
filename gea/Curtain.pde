@@ -26,11 +26,15 @@ class Curtain implements Scene
 
   public Curtain(){};
 
-  void closeScene(){};
+  void closeScene(){
+    captured = false;
+  };
   void initialScene(){
     mouseInfluenceSize *= mouseInfluenceSize; 
     mouseTearSize *= mouseTearSize;
     createCurtain();
+    strokeWeight(3);
+    captured = false;
   };
   void drawScene(){
     fill(backCol,100);
@@ -182,6 +186,9 @@ class Curtain implements Scene
           PVector last = (PVector) lastPos.get(i);
           PVector now = (PVector) dancerPos.get(i);
           float distanceSquared = distPointToSegmentSquared(last.x,last.y,now.x,now.y,position.x,position.y);
+          //debug
+          // fill(255,0,0);
+          // ellipse(now.x,now.y,14,14);
           //println("distanceSquared "+distanceSquared);
           //to move the curtain
           if (move) {

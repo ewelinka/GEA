@@ -27,8 +27,8 @@ class SemiCircles implements Scene
         dPos = dancers.getFirstDancerMiddleAndTop();  
       }
     }
-    fill(255,0,0);
-    ellipse(dPos.x, dPos.y, 20, 20);;
+   // fill(255,0,0);
+   // ellipse(dPos.x, dPos.y, 20, 20);;
 
     r = plny.width;
 
