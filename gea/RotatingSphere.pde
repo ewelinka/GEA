@@ -25,16 +25,16 @@ class RotatingSphere implements Scene
   void drawScene(){
     background(backCol);
     noFill();
-    //just for testing
-    stroke(255,0,0);
-    ellipse(dPos.x, dPos.y, nr*2, nr*2);
+    //just for testing debug
+    //stroke(255,0,0);
+    //ellipse(dPos.x, dPos.y, nr*2, nr*2);
     /////
 
     //if (frameCount % 5 == 0) {
     dancers.getDancers();
     if(dancers.hasDancers()){
       pdPos =dPos;
-      dPos = dancers.getFirstDancerMiddleXY();
+      dPos = dancers.getFirstDancerMiddleAndTop();
       // esto se deberia hacer solo si saltamos de no-user a "veo un usuario", para el resto de los casos esta en los calculos de DancerManager
       if(abs(dPos.x -pdPos.x)>4){
         dPos.x =pdPos.x + constrain(dPos.x -pdPos.x,-4,4);
@@ -60,28 +60,34 @@ class RotatingSphere implements Scene
       // dPos.y = height/2;
       dPos.x =pdPos.x + constrain(width/2 -pdPos.x,-4,4);
       dPos.y = pdPos.y + constrain(height/2 -pdPos.y,-4,4);
-      println("pdPos.x "+pdPos.x+" dPos.x "+dPos.x);
+     // println("pdPos.x "+pdPos.x+" dPos.x "+dPos.x);
       pdPos=dPos ;
       
       
     }
+    //dPos.y = height/2;
     //}
-    if(fixed) translate(width/2, height/2);
-    else translate(dPos.x, dPos.y);
-    
-    //rotateY (map(mouseX,0,width,0,PI));
-    rotateY (rotY);
-    stroke(thingCol, 166);
-    //if we want if big we don't care aboutenRad
-    if(large){
-      rsp.setNewRadius(500);
-      nr =500;
-    }
-    rsp.draw();
+    pushMatrix();
+      if(fixed) translate(width/2, height/2);
+      else translate(dPos.x, dPos.y);
+      
+      //rotateY (map(mouseX,0,width,0,PI));
+      rotateY (rotY);
+      stroke(thingCol, 166);
+      //if we want if big we don't care aboutenRad
+      if(large){
+        rsp.setNewRadius(500);
+        nr =500;
+      }
+      rsp.draw();
+    popMatrix();
    // rotY += 0.009;
 
-    if(dPos.x>=width/2) rotY += 0.009;
-    else rotY -= 0.009;
+   rotY += 0.009;
+    
+
+    drawGlobalAlphaHere();
+
   };
 
   String getSceneName(){return "RotatingSphere";};
@@ -120,19 +126,27 @@ class RotatingSphere implements Scene
     //--------------------------------------------------------
     void draw()
     {  
-      if(abs(newRadius-oldRadius)>40){
+      if(abs(newRadius-oldRadius)>10){
 
 
         if(newRadius>oldRadius) {
-          oldRadius*=1.01;
+         // oldRadius*=1.01;
+          //oldRadius*=1.001;
+          oldRadius*=1.005;
           for (int ni=0; ni < maxPoints; ni++)
-          points[ni] = new PVector (points[ni].x*1.009, points[ni].y*1.009, points[ni].z*1.009);
+          // points[ni] = new PVector (points[ni].x*1.009, points[ni].y*1.009, points[ni].z*1.009);
+           //points[ni] = new PVector (points[ni].x*1.001, points[ni].y*1.001, points[ni].z*1.001);
+          points[ni] = new PVector (points[ni].x*1.005, points[ni].y*1.005, points[ni].z*1.005);
 
         }
         else{
-          oldRadius*=0.99;
+         // oldRadius*=0.99;
+        //  oldRadius*=0.999;
+          oldRadius*=0.995;
           for (int ni=0; ni < maxPoints; ni++)
-          points[ni] = new PVector (points[ni].x*0.991, points[ni].y*0.991, points[ni].z*0.991);
+          //points[ni] = new PVector (points[ni].x*0.991, points[ni].y*0.991, points[ni].z*0.991);
+          // points[ni] = new PVector (points[ni].x*0.9991, points[ni].y*0.9991, points[ni].z*0.9991);
+            points[ni] = new PVector (points[ni].x*0.995, points[ni].y*0.995, points[ni].z*0.995);
         }
       }
 
@@ -163,5 +177,12 @@ class RotatingSphere implements Scene
         , 2*(c*d - a*b) / k  
         , (a*a + d*d - b*b - c*c) / k);
     }
+  }
+
+  void drawGlobalAlphaHere(){
+    translate(0,0,500);
+    fill(0, globalAlpha);
+    noStroke();
+    rect(0,0,width*2,height*2);
   }
 }

@@ -5,6 +5,8 @@ class HypnoticCircle implements Scene
 
   void closeScene(){};
   void initialScene(){
+    backCol = 0;
+    thingCol = 255;
     theta=0;
    // resetDancers();
     dPos= new PVector(0,0);
@@ -13,15 +15,15 @@ class HypnoticCircle implements Scene
   };
   void drawScene(){
     pg.beginDraw();
-    if (frameCount % 5 == 0) {
-      dancers.getDancers();
-      if(dancers.hasDancers()){
-        dPos = dancers.getFirstDancerMiddleXY();
-        //debugging
-        //pg.fill(255,0,0);
-        //pg.ellipse(dPos.x, dPos.y, 14, 14);
-      }
-    }
+  
+    dancers.getDancers();
+    if(dancers.hasDancers()){
+      dPos = dancers.getFirstDancerMiddleXY();
+      //debugging
+      //pg.fill(255,0,0);
+      //pg.ellipse(dPos.x, dPos.y, 14, 14);
+    }else dPos= new PVector(0,0);
+    
     
     rectMode(CENTER);
     pg.fill(backCol, 60);
@@ -41,6 +43,9 @@ class HypnoticCircle implements Scene
     }
     pg.endDraw();
     image(pg, 0, 0);
+
+    rectMode(CORNER);
+    drawGlobalAlpha();
   };
   String getSceneName(){return "HypnoticCircle";};
   void onPressedKey(String k){};

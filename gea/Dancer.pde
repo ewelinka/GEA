@@ -61,7 +61,9 @@ class Dancer
     pos_top.x = map_x(pos_top.x, this.depth);
     pos_top.y = map_y(pos_top.y); 
     float middle = min(pos_left.x,pos_right.x) + abs(pos_left.x - pos_right.x)/2;
-    float middle_y = ( height -top)/2 +top;
+    float middle_y = ( height -pos_top.y)/2 +pos_top.y;
+    // cambio 6.08.15
+    //float middle_y = ( height -top)/2 +top;
     pos_middle = new PVector(middle,middle_y);
   }
 

@@ -40,8 +40,8 @@ class Rain implements Scene
       semiCircle.setPosition(pos.x-100,pos.y);
 
       //debug
-      fill(255,0,0);
-      ellipse(pos.x, pos.y, 14, 14);
+      //fill(255,0,0);
+      //ellipse(pos.x, pos.y, 14, 14);
     } else semiCircle.setPosition(width+100, height+100);
 
     for(int i =0;i<3;i++) addBox();
@@ -49,31 +49,13 @@ class Rain implements Scene
     world.draw();
     world.step();
 
+    drawGlobalAlpha();
+
   };
   String getSceneName(){return "Rain";};
 
   void onPressedKey(String k){
     if (k == "toggle") {toggleContact();}
-    if (k == "RIGHT") {
-      gravityX+=5;
-      println("garvity X "+gravityX+ " gravity Y"+ gravityY);
-      world.setGravity(gravityX,gravityY);
-    }
-    if (k == "LEFT") {
-      gravityX-=5;
-      println("garvity X "+gravityX+ " gravity Y"+ gravityY);
-      world.setGravity(gravityX,gravityY);
-    }
-    if (k == "DOWN") {
-      gravityY+=5;
-      println("garvity X "+gravityX+ " gravity Y"+ gravityY);
-      world.setGravity(gravityX,gravityY);
-    }
-    if (k == "UP") {
-      gravityY-=5;
-      println("garvity X "+gravityX+ " gravity Y"+ gravityY);
-      world.setGravity(gravityX,gravityY);
-    }
 
   };
 

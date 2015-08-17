@@ -6,6 +6,8 @@ class SquareBackgroundK implements Scene
   int rectSize = 30;
   int refY = 0;
   float rotY = 0.0;
+  int alphaLocal = 200;
+  int divVal =30;
 
 
   public SquareBackgroundK(){};
@@ -18,15 +20,17 @@ class SquareBackgroundK implements Scene
   };
   void drawScene(){
     randomSeed(0);
-    background(backCol);
-    
+    //background(backCol);
+    fill(backCol,alphaLocal);
+    rect(0,0,width,height);
+
     dancers.getDancers();
     if(dancers.hasDancers()){
       dPos = dancers.getFirstDancerMiddleAndTop();
     } 
     //debug
-    fill(255,0,0);
-    ellipse(dPos.x, dPos.y, 14, 14);
+    //fill(255,0,0);
+    //ellipse(dPos.x, dPos.y, 14, 14);
 
     //rotateX(rotY);
     //rotY = map (frameCount%400,0,400,-0.4,0.4);
@@ -48,14 +52,14 @@ class SquareBackgroundK implements Scene
         // float shiftX4 = (width/2 - abs(width/2 - dPos.x))/15 * random(-1, 1);
         // float shiftY4 = (height/2 - abs(height/2 - refY))/15 * random(-1, 1);
 
-        float shiftX1 = (width/2 - abs(width/2 - dPos.x))/15 * random(-1, 1);
-        float shiftY1 = (width/2 - abs(width/2 - dPos.x))/15 * random(-1, 1);
-        float shiftX2 = (width/2 - abs(width/2 - dPos.x))/15 * random(-1, 1);
-        float shiftY2 = (width/2 - abs(width/2 - dPos.x))/15 * random(-1, 1);
-        float shiftX3 = (width/2 - abs(width/2 - dPos.x))/15 * random(-1, 1);
-        float shiftY3 = (width/2 - abs(width/2 - dPos.x))/15 * random(-1, 1);
-        float shiftX4 = (width/2 - abs(width/2 - dPos.x))/15 * random(-1, 1);
-        float shiftY4 = (width/2 - abs(width/2 - dPos.x))/15 * random(-1, 1);
+        float shiftX1 = (width/2 - abs(width/2 - dPos.x))/divVal * random(-1, 1);
+        float shiftY1 = (width/2 - abs(width/2 - dPos.x))/divVal * random(-1, 1);
+        float shiftX2 = (width/2 - abs(width/2 - dPos.x))/divVal * random(-1, 1);
+        float shiftY2 = (width/2 - abs(width/2 - dPos.x))/divVal * random(-1, 1);
+        float shiftX3 = (width/2 - abs(width/2 - dPos.x))/divVal * random(-1, 1);
+        float shiftY3 = (width/2 - abs(width/2 - dPos.x))/divVal * random(-1, 1);
+        float shiftX4 = (width/2 - abs(width/2 - dPos.x))/divVal * random(-1, 1);
+        float shiftY4 = (width/2 - abs(width/2 - dPos.x))/divVal * random(-1, 1);
        
         beginShape();
         vertex(posX+shiftX1, posY+shiftY1);
@@ -65,9 +69,30 @@ class SquareBackgroundK implements Scene
         endShape(CLOSE);
       }
     } 
+
+    drawGlobalAlpha();
   };
   String getSceneName(){return "SquareBackgroundK";};
-  void onPressedKey(String k){};
+  void onPressedKey(String k){
+    if(k=="UP"){
+      alphaLocal = min(alphaLocal+10,255);
+      println("alphaLocal ",alphaLocal);
+    }
+    if(k=="DOWN"){
+      alphaLocal = max(alphaLocal-10,1);
+      println("alphaLocal ",alphaLocal);
+    }
+
+    if(k=="RIGHT"){
+      divVal=max(divVal-2,3);
+      println("divVal "+divVal);
+    }
+    if(k=="LEFT"){
+      divVal=min(divVal+2,30);
+      println("divVal "+divVal);
+    }
+
+  };
   void onImg(PImage img){};
 }
 

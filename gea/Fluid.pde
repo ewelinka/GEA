@@ -5,12 +5,16 @@ class Fluid implements Scene
   Particle[] particles = new Particle[particleCount+1];
   int influenceRadius=70;
   int sWeight=2;
+  int lineTransparency =20;
 
   public Fluid(){};
 
   void closeScene(){};
   void initialScene(){
     //resetDancers();
+    backCol = 0;
+    thingCol = 255;
+    
     reject = true;
     lines = false;
     gravity = false;
@@ -24,15 +28,15 @@ class Fluid implements Scene
   void drawScene(){
     background(backCol);
 
-    if (frameCount % 5 == 0) {
+    //if (frameCount % 5 == 0) {
       dancers.getDancers();
       if(dancers.hasDancers()){
         dPos = dancers.getFirstDancerMiddleAndTop();
       }
-    }
+    //}
     //debug
-    fill(255,0,0);
-    ellipse(dPos.x, dPos.y, 14, 14);
+   // fill(255,0,0);
+   // ellipse(dPos.x, dPos.y, 14, 14);
     fill(backCol);
     stroke (thingCol);
     strokeWeight(1);
@@ -63,6 +67,15 @@ class Fluid implements Scene
     }
     if(k=="DOWN"){
       sWeight = max(sWeight-1,1);
+    }
+
+    if(k=="toggle"){
+      lineTransparency = max(lineTransparency-10,0);
+      println("lineTransparency ",lineTransparency);
+    }
+    if(k=="shake"){
+      lineTransparency = min(lineTransparency+10,255);
+      println("lineTransparency ",lineTransparency);
     }
   };
   void onImg(PImage img){};
@@ -161,7 +174,7 @@ class Fluid implements Scene
             if (drawthis) {
                /* Set the stroke color */
               // stroke (redshade, 0, blueshade);
-               stroke(thingCol,20);
+               stroke(thingCol,lineTransparency);
                /* draw the line */
                line(x,y,tx,ty);
             }

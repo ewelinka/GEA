@@ -29,12 +29,11 @@ int contactType = 2;
 
 PGraphics pg;
 //
-public void init(){
-
-  frame.removeNotify();
-  frame.setUndecorated(true);
-  frame.addNotify();
-  super.init();
+ public void init(){
+   frame.removeNotify();
+   frame.setUndecorated(true);
+   frame.addNotify();
+   super.init();
 }
  
 
@@ -57,6 +56,7 @@ void setup(){
   numbers.add(9,'9');
 
   manager = new SceneManager();  
+  frameRate(120);
 
   // int scenesNr = manager.getScenesNr();
   // for (int i =0;i<=scenesNr;i++){
@@ -88,10 +88,11 @@ void setup(){
 
 void draw(){
   manager.actualScene.drawScene(); 
-  drawGlobalAlpha();
+  //if(frameCount%200==0) println("frameRate ", frameRate);
+  //drawGlobalAlpha();
 }
 
-void keyReleased(){
+void keyPressed(){
   if (keyCode == UP) manager.pressedKey("UP");
   if (keyCode == DOWN) manager.pressedKey("DOWN");
   if (keyCode == LEFT) manager.pressedKey("LEFT");
@@ -104,22 +105,27 @@ void keyReleased(){
   if (key == 'g' || key == 'G') manager.pressedKey("gravity");
   if (key == 's' || key == 'S') manager.pressedKey("shake"); 
 
+  if (key == 'f' || key == 'F') println("frameRate",frameRate);
+
   // global variables
   if (key == 'v' || key =='V') {
-    globalAlpha = min(globalAlpha+5,255);
-    println("globalAlpha "+globalAlpha);
-  }  
-  //black
-  if (key == 'b' || key =='B') globalAlpha = 255;
-  //nothing
-  if (key == 'n' || key =='N') {
     globalAlpha = 0;
+    
+  }  
+  // blanco
+  if (key == 'b' || key =='B') {
+    globalAlpha = min(globalAlpha-20,255);
+    println("globalAlpha B "+globalAlpha);
+  }
+  // MAS NEGRO
+  if (key == 'n' || key =='N') {
+    globalAlpha = max(globalAlpha+20, 0);
+    println("globalAlpha N "+globalAlpha);
   }  
   if (key == 'm'|| key =='M'){
-    globalAlpha = max(globalAlpha-5, 0);
-    println("globalAlpha "+globalAlpha);
+    
+    globalAlpha = 255;
   }
-
 
   if (key == 'a' || key =='A') switchBlackAndWhite();
 

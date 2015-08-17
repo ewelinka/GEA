@@ -14,6 +14,9 @@ class FluidAndRotate implements Scene
   void closeScene(){};
   void initialScene(){
     //resetDancers();
+    backCol = 0;
+    thingCol = 255;
+
     reject = true;
     lines = false;
     gravity = false;
@@ -27,16 +30,16 @@ class FluidAndRotate implements Scene
   void drawScene(){
     background(backCol);
 
-    if (frameCount % 5 == 0) {
-      dancers.getDancers();
-      if(dancers.hasDancers()){
-        //dPos = dancers.getFirstDancerMiddleXY();
-        dPos = dancers.getFirstDancerMiddleAndTop();
-      }
+ 
+    dancers.getDancers();
+    if(dancers.hasDancers()){
+      if(notRotating) dPos = dancers.getFirstDancerMiddleXY();
+      else dPos = dancers.getFirstDancerMiddleAndTop();
     }
+    
     //debug
-    fill(255,0,0);
-    ellipse(dPos.x, dPos.y, 14, 14);
+    //fill(255,0,0);
+    //ellipse(dPos.x, dPos.y, 14, 14);
     
     fill(backCol);
     stroke (thingCol);
@@ -50,6 +53,8 @@ class FluidAndRotate implements Scene
       if(notRotating) particle.update(i);
       else particle.updateRotate();
     }
+
+    //drawGlobalAlpha();
   };
   String getSceneName(){return "FluidAndRotate";};
   void onPressedKey(String k){

@@ -12,17 +12,17 @@ class SquareFrac implements Scene
 
   void closeScene(){};
   void initialScene(){
-    //resetDancers();
+    backCol = 0;
+    thingCol = 255;
     dPos= new PVector(0,0);
-    //cleanPg();
   }
   void drawScene(){
-    if (frameCount % 5 == 0) {
-      dancers.getDancers();
-      if(dancers.hasDancers()){
-        dPos = dancers.getFirstDancerMiddleAndTop();
-      }
+
+    dancers.getDancers();
+    if(dancers.hasDancers()){
+      dPos = dancers.getFirstDancerMiddleAndTop();
     }
+    
     pg.beginDraw();
     //diferentes maneras de limpiar la pantalla
    //  background(0);
@@ -40,6 +40,8 @@ class SquareFrac implements Scene
     drawFractal(0);
     pg.endDraw();
     image(pg, 0, 0);
+
+    drawGlobalAlpha();
     //debug
    // fill(255,0,0);
     //ellipse(dPos.x, dPos.y, 14, 14);
@@ -69,7 +71,7 @@ class SquareFrac implements Scene
     //si no nos hemos pasado en nuestra iteracion
     //si lo dibujamos
     if( n < tol ) {
-      pg.fill(255,20);
+      pg.fill(thingCol,20);
       pg.rect(-radio/2,-radio/2,radio,radio);
       //circuloChido(20);
 

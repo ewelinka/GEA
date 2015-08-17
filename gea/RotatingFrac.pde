@@ -2,6 +2,8 @@
 class RotatingFrac implements Scene
 {   
   int num = 6; // size of matrix
+  int pointSize = 2;
+  int velocity =1000;
 
   float power = 4; // power in coloring algorithm
   float angle = TWO_PI; // angle in spread of branches
@@ -12,10 +14,12 @@ class RotatingFrac implements Scene
   void closeScene(){};
   void initialScene(){
     //calcNumf();
-    //resetDancers();
+    //resetDancer();
     strokeWeight(1);
+    
   };
   void drawScene(){
+
     background(backCol); // wipe the background
     fill(thingCol);
     //if (frameCount % 5 == 0) {
@@ -35,8 +39,8 @@ class RotatingFrac implements Scene
    // }
 
     //debug
-    fill(255,0,0);
-    ellipse(dPos.x, dPos.y, 14, 14);
+    //fill(255,0,0);
+    //ellipse(dPos.x, dPos.y, 14, 14);
 
     int shiftFrac =100;
     drawOneFrac(width/2, height/2);
@@ -45,19 +49,38 @@ class RotatingFrac implements Scene
     drawOneFrac(width-shiftFrac, height-shiftFrac);
     drawOneFrac(width-shiftFrac, 0+shiftFrac);
     //just for debugging
-    fill(255,0,0);
-    ellipse(dPos.x, dPos.y, 14, 14);
+    //fill(255,0,0);
+    //ellipse(dPos.x, dPos.y, 14, 14);
+
+    drawGlobalAlpha();
   };
   String getSceneName(){return "RotatingFrac";};
   void onPressedKey(String k){
-    if(k == "RIGHT" && num < 6){
-      num++;
+    // if(k == "RIGHT" && num < 6){
+    //   num++;
+    // }
+    // if(k == "LEFT" && num > 2 ){
+    //   num--;
+    // }
+    if(k == "RIGHT" ){
+      velocity=max(velocity -50,10);
+      println("velocity ", velocity);
     }
-    if(k == "LEFT" && num > 2 ){
-      num--;
+    if(k == "LEFT"){
+      velocity+=50;
+      println("velocity ", velocity);
     }
     if( k == "toggle" ) { // toggle drawing nodes option when spacebar is pressed
       spots = !spots;
+    }
+
+    if(k=="UP"){
+      pointSize+=1;
+      println("pointSize "+pointSize);
+    }
+    if(k=="DOWN"){
+      pointSize = max(pointSize-1,1);
+      println("pointSize "+pointSize);
     }
 
   };
@@ -69,7 +92,7 @@ class RotatingFrac implements Scene
       translate(px,py);
       //fill(abs(backCol-60),100);
       //ellipse(0, 0, height-30, height-30);
-      rotate(map(frameCount%1000,0,1000,0 ,2*PI));
+      rotate(map(frameCount%velocity,0,velocity,0 ,2*PI));
       plotFrac(0,0,num,PI,TWO_PI);
     popMatrix();
 
@@ -86,7 +109,7 @@ class RotatingFrac implements Scene
     // if spots is on and we are on the first value of n, map initial node
     if( spots && n == num ) {
       fill(thingCol);
-      ellipse(x,y,n+2,n+2);
+      ellipse(x,y,n+pointSize,n+pointSize);
     }
 
     // map nodes
@@ -98,7 +121,7 @@ class RotatingFrac implements Scene
         line( x, y, x+r*cos(t), y+r*sin(t) );
         if( spots ) { // if spots, draw node
           fill(thingCol);
-          ellipse(x+r*cos(t), y+r*sin(t), n+2, n+2);
+          ellipse(x+r*cos(t), y+r*sin(t), n+pointSize, n+pointSize);
         }
         // spread nodes across PI radians
         //plotFrac(x+r*cos(t),y+r*sin(t),n-1,t,PI);

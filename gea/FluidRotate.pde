@@ -26,7 +26,7 @@ class FluidRotate implements Scene
     /* We draw our border. It is 10 pixels from all sides. */
     quad(10,10,width-10,10,width-10,height-10,10,height-10);
     /* The particles are looped through, then updated. */
-    if (frameCount % 5 == 0) {
+  //  if (frameCount % 5 == 0) {
       dancers.getDancers();
       if(dancers.hasDancers()){
         dPos = dancers.getFirstDancerMiddleAndTop();
@@ -34,7 +34,7 @@ class FluidRotate implements Scene
         fill(255,0,0);
         ellipse(dPos.x, dPos.y, 10, 10);
       }   
-    }
+   // }
     strokeWeight(sWeight);
     for (int i = particleCount; i >= 0; i--) { 
       Particle particle = (Particle) particles[i];

@@ -3,8 +3,8 @@ class Curtain implements Scene
   boolean move = true;
   ArrayList particles;
 
-  float mouseInfluenceSize = 10; 
-  float mouseTearSize = 8;
+  float mouseInfluenceSize = 100; 
+  float mouseTearSize = 400;
   float mouseInfluenceScalar = 1;
 
   float gravity = 392; 
@@ -23,6 +23,7 @@ class Curtain implements Scene
 
   int leftOverDeltaTime = 0;
   int constraintAccuracy = 3;
+  int timeStepAmt ;
 
   public Curtain(){};
 
@@ -30,25 +31,27 @@ class Curtain implements Scene
     captured = false;
   };
   void initialScene(){
-    mouseInfluenceSize *= mouseInfluenceSize; 
-    mouseTearSize *= mouseTearSize;
     createCurtain();
-    strokeWeight(3);
     captured = false;
+    mouseInfluenceScalar = 0.1;
+    mouseInfluenceSize = 300;
+    timeStepAmt = 5;
   };
   void drawScene(){
     fill(backCol,100);
     rect(0,0,width,height);
+    strokeWeight(3);
     trackingSkeleton();
 
-    currentTime = millis();
-    long deltaTimeMS = currentTime - previousTime;
-    previousTime = currentTime; // reset previousTime
-    int timeStepAmt = (int)((float)(deltaTimeMS + leftOverDeltaTime) / (float)fixedDeltaTime);
-    // Here we cap the timeStepAmt to prevent the iteration count from getting too high and exploding
-    timeStepAmt = min(timeStepAmt, 5);
-    leftOverDeltaTime += (int)deltaTimeMS - (timeStepAmt * fixedDeltaTime); // add to the leftOverDeltaTime.
-    mouseInfluenceScalar = 1.0 / timeStepAmt;
+    // currentTime = millis();
+    // long deltaTimeMS = currentTime - previousTime;
+    // previousTime = currentTime; // reset previousTime
+    // int timeStepAmt = (int)((float)(deltaTimeMS + leftOverDeltaTime) / (float)fixedDeltaTime);
+    // // Here we cap the timeStepAmt to prevent the iteration count from getting too high and exploding
+    // timeStepAmt = min(timeStepAmt, 5);
+    // println("timeStepAmt "+timeStepAmt);
+    // leftOverDeltaTime += (int)deltaTimeMS - (timeStepAmt * fixedDeltaTime); // add to the leftOverDeltaTime.
+    // mouseInfluenceScalar = 1.0 / timeStepAmt;
 
     for (int iteration = 1; iteration <= timeStepAmt; iteration++) {
       for (int x = 0; x < constraintAccuracy; x++) {
@@ -69,8 +72,11 @@ class Curtain implements Scene
       particle.draw();
     }
    
-    if (frameCount % 60 == 0)
-      println("Frame rate is " + frameRate);
+   // drawGlobalAlpha();
+   translate(0, 0, 0.6);
+  fill(0, globalAlpha);
+  noStroke();
+  rect(0,0,width,height);
 
   };
   String getSceneName(){return "Curtain";};
@@ -78,6 +84,23 @@ class Curtain implements Scene
     if(k == "reject") createCurtain(); // we reset the curtain
     if(k == "gravity") toggleGravity();
     if(k == "toggle") toggleMove();
+
+    if(k=="RIGHT"){
+      mouseInfluenceSize+=100;
+      println("mouseInfluenceSize "+mouseInfluenceSize);
+    }
+    if(k=="LEFT"){
+      mouseInfluenceSize-=100;
+      println("mouseInfluenceSize "+mouseInfluenceSize);
+    }
+    if(k=="UP"){
+      mouseInfluenceScalar+=0.1;
+      println("mouseInfluenceScalar "+mouseInfluenceScalar);
+    }
+    if(k=="DOWN"){
+      mouseInfluenceScalar -= 0.1;
+      println("mouseInfluenceScalar "+mouseInfluenceScalar);
+    }
 
   };
   void onImg(PImage img){};
@@ -110,6 +133,7 @@ class Curtain implements Scene
   }
 
   void toggleMove () {
+    println("toggle move!");
     move = !move;
   }
 
@@ -153,6 +177,40 @@ class Curtain implements Scene
       lastPosition = pos.get();
       acceleration = new PVector(0,0);
     }
+
+    void updateInteractions () {
+      // this is where our interaction comes in.
+     // if(mr.y != 0){
+      if(captured){
+        // for all interesting body points
+        for (int i = 0; i < dancerPos.size(); i++) {
+          PVector last = (PVector) lastPos.get(i);
+          PVector now = (PVector) dancerPos.get(i);
+          
+          float distanceSquared = distPointToSegmentSquared(last.x,last.y,now.x,now.y,position.x,position.y);
+          //if(frameCount%200 == 0 )println("last "+last+" now "+now+" distanceSquared "+distanceSquared);
+          //debug
+          // fill(255,0,0);
+          // ellipse(now.x,now.y,14,14);
+          //println("distanceSquared "+distanceSquared);
+          //to move the curtain
+          if (move) {
+            if (distanceSquared < mouseInfluenceSize) { // remember mouseInfluenceSize was squared in setup()
+              // To change the velocity of our particle, we subtract that change from the lastPosition.
+              // When the physics gets integrated (see updatePhysics()), the change is calculated
+              // Here, the velocity is set equal to the cursor's velocity
+              
+              lastPosition = PVector.sub(position, new PVector((now.x-last.x)*mouseInfluenceScalar, (now.y-last.y)*mouseInfluenceScalar));
+            // println("distanceSquared "+distanceSquared + " mouseInfluenceSize "+mouseInfluenceSize+ " lastPosition "+lastPosition);
+            }
+          }
+          else { // we tear the cloth by removing links
+            if (distanceSquared < mouseTearSize) 
+              links.clear();
+          }
+        }
+      }
+    }
     
     // The update function is used to update the physics of the particle.
     // motion is applied, and links are drawn here
@@ -166,9 +224,13 @@ class Curtain implements Scene
       /* Verlet Integration, WAS using http://archive.gamedev.net/reference/programming/features/verlet/ 
          however, we're using the tradition Velocity Verlet integration, because our timestep is now constant. */
       // velocity = position - lastPosition
+     // if(frameCount%200 == 0 )println("position "+position+" lastPosition "+lastPosition);
+  
       PVector velocity = PVector.sub(position, lastPosition);
+
       // apply damping: acceleration -= velocity * (damping/mass)
       acceleration.sub(PVector.mult(velocity,damping/mass)); 
+      //if(frameCount%200 == 0 )println("timeStep "+timeStep+" velocity "+velocity+ " acceleration "+acceleration);
       // newPosition = position + velocity + 0.5 * acceleration * deltaTime * deltaTime
       PVector nextPos = PVector.add(PVector.add(position, velocity), PVector.mult(PVector.mult(acceleration, 0.5), timeStep * timeStep));
       
@@ -177,39 +239,11 @@ class Curtain implements Scene
       position.set(nextPos);
       acceleration.set(0,0,0);
     } 
-    void updateInteractions () {
-      // this is where our interaction comes in.
-     // if(mr.y != 0){
-      if(captured){
-        // for all interesting body points
-        for (int i = 0; i < dancerPos.size(); i++) {
-          PVector last = (PVector) lastPos.get(i);
-          PVector now = (PVector) dancerPos.get(i);
-          float distanceSquared = distPointToSegmentSquared(last.x,last.y,now.x,now.y,position.x,position.y);
-          //debug
-          // fill(255,0,0);
-          // ellipse(now.x,now.y,14,14);
-          //println("distanceSquared "+distanceSquared);
-          //to move the curtain
-          if (move) {
-            if (distanceSquared < mouseInfluenceSize) { // remember mouseInfluenceSize was squared in setup()
-              // To change the velocity of our particle, we subtract that change from the lastPosition.
-              // When the physics gets integrated (see updatePhysics()), the change is calculated
-              // Here, the velocity is set equal to the cursor's velocity
-              lastPosition = PVector.sub(position, new PVector((now.x-last.x)*mouseInfluenceScalar, (now.y-last.y)*mouseInfluenceScalar));
-            }
-          }
-          else { // we tear the cloth by removing links
-            if (distanceSquared < mouseTearSize) 
-              links.clear();
-          }
-        }
-      }
-    }
+
 
     void draw () {
       // draw the links and points
-      stroke(255);
+      stroke(thingCol);
       if (links.size() > 0) {
         for (int i = 0; i < links.size(); i++) {
           Link currentLink = (Link) links.get(i);

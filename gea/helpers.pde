@@ -81,6 +81,7 @@ void getDancersFromAlternatives(int [] alter, int [] alterZ){
 }
 
 void drawGlobalAlpha(){
+  translate(0, 0, 1);
   fill(0, globalAlpha);
   noStroke();
   rect(0,0,width,height);

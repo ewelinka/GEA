@@ -72,56 +72,35 @@ void trackingSkeleton(){
   boolean allFalse = false;
   for(int i=0;i<userList.length;i++)
   {
-    if(context.isTrackingSkeleton(userList[i]))
-    {
-      ArrayList<PVector> actualPos = setNewPositions(userList[i]);
+    //if(userList.length==1){
+      if(context.isTrackingSkeleton(userList[i]))
+      {
+        ArrayList<PVector> actualPos = setNewPositions(userList[i]);
 
-      if(captured){
-        lastPos = dancerPos;
-        dancerPos = actualPos;
+        if(captured){
+          if(frameCount%200 == 0 )println("lastPos "+dancerPos + " actualPos "+actualPos);
 
-      }else{
-        dancerPos = actualPos;
-        lastPos = dancerPos;
-        captured = true;
-      }
-      allFalse = true;
-    } else{
-      captured = false;
-    }   
-  } 
+          lastPos = dancerPos;
+          dancerPos = actualPos;
+
+        }else{
+          dancerPos = actualPos;
+          lastPos = dancerPos;
+          captured = true;
+        }
+        allFalse = true;
+      } else{
+        captured = false;
+      }   
+   // } 
+  }
   if(!allFalse){
     dancerPos.clear();
     lastPos.clear();
+    captured = false;
   }
 }
 
-void trackingHands(){
-  context.update();
-  int[] userList = context.getUsers();
-
-  for(int i=0;i<userList.length;i++)
-  {
-    if(context.isTrackingSkeleton(userList[i]))
-    {
-      ArrayList<PVector> actualPos = setHandsPositions(userList[i]);
-
-      if(captured){
-        lastPos = dancerPos;
-        dancerPos = actualPos;
-
-      }else{
-        dancerPos = actualPos;
-        lastPos = dancerPos;
-        captured = true;
-      }
-    } else{
-      dancerPos.clear();
-      lastPos.clear();
-      captured = false;
-    }   
-  } 
-}
 
 ArrayList<PVector> setNewPositions(int userId){
   ArrayList<PVector> currentPos= new ArrayList<PVector>();
@@ -145,21 +124,21 @@ ArrayList<PVector> setNewPositions(int userId){
     
     currentPos.add(rightHand_Proj);
 
-    PVector head=new PVector();
-    context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_HEAD, head);
-    PVector head_Proj = new PVector(); 
-    context.convertRealWorldToProjective(head,head_Proj);
-    head_Proj= rescaleXY(head_Proj);
-    last = (PVector) lastPos.get(2);
-    head_Proj = new PVector(last.x + constrain(head_Proj.x -last.x,-5,5), last.y + constrain(head_Proj.y -last.y,-20,20));
-    currentPos.add(head_Proj);
+    // PVector head=new PVector();
+    // context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_HEAD, head);
+    // PVector head_Proj = new PVector(); 
+    // context.convertRealWorldToProjective(head,head_Proj);
+    // head_Proj= rescaleXY(head_Proj);
+    // last = (PVector) lastPos.get(2);
+    // head_Proj = new PVector(last.x + constrain(head_Proj.x -last.x,-5,5), last.y + constrain(head_Proj.y -last.y,-20,20));
+    // currentPos.add(head_Proj);
 
     PVector leftFoot=new PVector();
     context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_FOOT, leftFoot);
     PVector leftFoot_Proj = new PVector(); 
     context.convertRealWorldToProjective(leftFoot,leftFoot_Proj);
     leftFoot_Proj= rescaleXY(leftFoot_Proj);
-    last = (PVector) lastPos.get(3);
+    last = (PVector) lastPos.get(2);
     leftFoot_Proj = new PVector(last.x + constrain(leftFoot_Proj.x -last.x,-5,5), last.y + constrain(leftFoot_Proj.y -last.y,-20,20));
     currentPos.add(leftFoot_Proj);
 
@@ -168,7 +147,7 @@ ArrayList<PVector> setNewPositions(int userId){
     PVector rightFoot_Proj = new PVector(); 
     context.convertRealWorldToProjective(rightFoot,rightFoot_Proj);
     rightFoot_Proj= rescaleXY(rightFoot_Proj);
-    last = (PVector) lastPos.get(4);
+    last = (PVector) lastPos.get(3);
     rightFoot_Proj = new PVector(last.x + constrain(rightFoot_Proj.x -last.x,-5,5), last.y + constrain(rightFoot_Proj.y -last.y,-20,20));
     currentPos.add(rightFoot_Proj);
   }else{  
@@ -186,12 +165,12 @@ ArrayList<PVector> setNewPositions(int userId){
     rightHand_Proj= rescaleXY(rightHand_Proj);
     currentPos.add(rightHand_Proj);
 
-    PVector head=new PVector();
-    context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_HEAD, head);
-    PVector head_Proj = new PVector(); 
-    context.convertRealWorldToProjective(head,head_Proj);
-    head_Proj= rescaleXY(head_Proj);
-    currentPos.add(head_Proj);
+    // PVector head=new PVector();
+    // context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_HEAD, head);
+    // PVector head_Proj = new PVector(); 
+    // context.convertRealWorldToProjective(head,head_Proj);
+    // head_Proj= rescaleXY(head_Proj);
+    // currentPos.add(head_Proj);
 
     PVector leftFoot=new PVector();
     context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_FOOT, leftFoot);
@@ -248,6 +227,32 @@ ArrayList<PVector> setHandsPositions(int userId){
 }
 
 
+void trackingHands(){
+  context.update();
+  int[] userList = context.getUsers();
+
+  for(int i=0;i<userList.length;i++)
+  {
+    if(context.isTrackingSkeleton(userList[i]))
+    {
+      ArrayList<PVector> actualPos = setHandsPositions(userList[i]);
+
+      if(captured){
+        lastPos = dancerPos;
+        dancerPos = actualPos;
+
+      }else{
+        dancerPos = actualPos;
+        lastPos = dancerPos;
+        captured = true;
+      }
+    } else{
+      dancerPos.clear();
+      lastPos.clear();
+      captured = false;
+    }   
+  } 
+}
 // -----------------------------------------------------------------
 // SimpleOpenNI events
 
